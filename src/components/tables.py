@@ -14,12 +14,12 @@ def render_status_table(status_df: pd.DataFrame):
 
     # Prepare display data
     display_cols = [
-        "Cluster",
-        "Site",
+        "cluster",
+        "site_name",
         "DeploymentID",
         "Country",
         "status",
-        "last_recorded",
+        "total_recordings",
         "days_since_last",
     ]
 
@@ -40,12 +40,13 @@ def render_status_table(status_df: pd.DataFrame):
 
     # Rename columns for better display
     column_rename = {
+        "site_name": "Site",
+        "cluster": "Cluster",
         "DeploymentID": "Device ID",
-        "last_recorded": "Last Recording",
+        "total_recordings": "Total recordings",
         "days_since_last": "Days Since Last",
         "status": "Status",
     }
-
     table_data = table_data.rename(columns=column_rename)
 
     # Style function for better visual appeal

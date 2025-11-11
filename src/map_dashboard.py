@@ -168,30 +168,27 @@ def render_status_tab(
     # Filters for status table
     filtered_data, _ = render_complete_filters(device_data, key_prefix="status")
 
-    if not filtered_data.empty:
-        # Display options
-        col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
-        with col2:
-            sort_by = st.selectbox(
-                "Sort by",
-                ["device_name", "Country", "status", "last_file", "total_recordings"],
-                index=2,  # Default to status
-            )
-        with col3:
-            ascending = st.checkbox("Ascending order", value=False)
-
-        # Sort and display table
-        sorted_data = filtered_data.sort_values(by=sort_by, ascending=ascending)
-        render_status_table(sorted_data)
-
-        # Summary statistics
-        render_info_section_header(
-            "📊 Summary Statistics", level="h4", style_class="map-summary-header"
+    with col2:
+        sort_by = st.selectbox(
+            "Sort by",
+            ["device_name", "Country", "status", "last_file", "total_recordings"],
+            index=2, 
         )
-        render_summary_table(filtered_data)
-    else:
-        st.warning("⚠️ No devices match the current filter criteria.")
+    with col3:
+        ascending = st.checkbox("Ascending order", value=False)
+
+    # Sort and display table
+    sorted_data = filtered_data.sort_values(by=sort_by, ascending=ascending)
+    render_status_table(sorted_data)
+
+    # Summary statistics
+    render_info_section_header(
+        "📊 Summary Statistics", level="h4", style_class="map-summary-header"
+    )
+    render_summary_table(filtered_data)
+
 
 
 def render_activity_tab(data_service: DataService):

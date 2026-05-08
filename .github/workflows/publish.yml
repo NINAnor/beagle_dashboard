@@ -16,9 +16,9 @@ jobs:
       matrix:
         include:
           - context: .
-            image: ghcr.io/ninanor/dashboard-dashboard
+            image: ghcr.io/ninanor/beagle-dashboard
           - context: ./proxy
-            image: ghcr.io/ninanor/dashboard-proxy
+            image: ghcr.io/ninanor/beagle-proxy
 
     permissions:
       contents: read
@@ -52,6 +52,6 @@ jobs:
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           build-args: ${{ matrix.args }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

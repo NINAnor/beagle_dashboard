@@ -2,42 +2,9 @@
 Audio / dataset statistics components for the BEAGLE dashboard.
 """
 
-import pandas as pd
 import streamlit as st
 
 from components.ui_styles import info_grid, section_header, SECTION_COLORS
-
-
-def render_site_selection(site_info: pd.DataFrame) -> tuple:
-    """Render country and site selection interface."""
-    section_header("Site selection", SECTION_COLORS["data"], "🌍")
-    # Country filter
-    countries = site_info["Country"].dropna().unique().tolist()
-    selected_country = st.selectbox(
-        "Country", sorted(countries), key="audio_country_filter"
-    )
-
-    # Filter by country
-    filtered_site_info = site_info[site_info["Country"] == selected_country]
-
-    # Site filter
-    sites = filtered_site_info["Site"].dropna().unique().tolist()
-    selected_site = st.selectbox(
-        "Site", sorted(sites), key="audio_site_filter"
-    )
-
-    return selected_country, selected_site, filtered_site_info
-
-
-def render_site_details(record: pd.Series) -> None:
-    """Render site information details."""
-    info_grid([
-        ("🌍", "Country",       str(record.get("Country", "N/A"))),
-        ("🏞️", "Site",          str(record.get("Site", "N/A"))),
-        ("🗂️", "Cluster",       str(record.get("Cluster", "N/A"))),
-        ("📡", "Device ID",     str(record.get("DeviceID", "N/A"))),
-        ("🔖", "Deployment ID", str(record.get("DeploymentID", "N/A"))),
-    ])
 
 
 def render_audio_stats(stats: dict, total_stats: dict = None) -> None:

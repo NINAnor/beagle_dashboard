@@ -9,7 +9,6 @@ import streamlit as st
 from config.settings import APP_TITLE
 from data_overview_dashboard import show_data_overview_dashboard
 from map_dashboard import app as map_app
-from site_dashboard import show_site_dashboard
 from components.ui_styles import load_custom_css, SECTION_COLORS
 
 
@@ -54,7 +53,6 @@ def main():
     NAV_ITEMS = {
         "🗺️ Device status":  ("Device status",  SECTION_COLORS["map"]),
         "📊 Data overview":  ("Data overview",   SECTION_COLORS["data"]),
-        "🏞️ Site metadata":  ("Site metadata",   SECTION_COLORS["site"]),
     }
 
     selected_label = st.sidebar.radio(
@@ -68,16 +66,13 @@ def main():
     st.sidebar.divider()
     st.sidebar.caption(
         "🗺️ **Device status** — map & device health\n\n"
-        "📊 **Data overview** — recordings & activity\n\n"
-        "🏞️ **Site metadata** — site details & images"
+        "📊 **Data overview** — site details, recordings & images"
     )
 
     if option == "Device status":
         map_app()
     elif option == "Data overview":
         show_data_overview_dashboard()
-    elif option == "Site metadata":
-        show_site_dashboard()
 
 
 if __name__ == "__main__":

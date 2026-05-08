@@ -7,6 +7,7 @@ import streamlit as st
 
 from components.charts import (
     render_country_bar_chart,
+    render_activity_heatmap,
 )
 from components.filters import render_complete_filters
 from components.map_viz import render_device_map
@@ -50,10 +51,11 @@ def app():
         render_complete_sidebar(metrics=metrics)
 
     # Main dashboard tabs
-    tab1, tab2 = st.tabs(
+    tab1, tab2, tab3 = st.tabs(
         [
             f"{TAB_ICONS['map']} Map View",
             f"{TAB_ICONS['status']} Device Status",
+            f"{TAB_ICONS['activity']} Recording Activity",
         ]
     )
 
@@ -62,6 +64,9 @@ def app():
 
     with tab2:
         render_status_tab(device_data, metrics, data_service)
+
+    with tab3:
+        render_activity_tab(data_service)
 
     # Footer
     st.caption(
@@ -137,6 +142,85 @@ def render_status_tab(
     # Summary statistics
     section_header("Summary", SECTION_COLORS["status"], "📊")
     render_summary_table(filtered_data)
+
+
+def render_activity_tab(data_service: DataService):
+    """Render the recording activity heatmap tab."""
+    with st.spinner("Loading activity data..."):
+        recording_data = data_service.load_recording_matrix()
+
+    if recording_data.empty:
+        st.info("No recording activity data available.")
+        return
+
+    filtered_recording = _filter_activity(recording_data)
+    render_activity_heatmap(filtered_recording)
+
+
+def _filter_activity(recording_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Render filter controls and return a filtered slice of the recording matrix.
+    The recording matrix has a (country, device_id) MultiIndex and date columns.
+    """
+    from datetime import date
+
+    section_header("Filters", SECTION_COLORS["activity"], "\U0001f50d")
+
+    all_countries = sorted(recording_data.index.get_level_values(0).unique().tolist())
+
+    date_cols = recording_data.columns.tolist()
+    parsed_dates = pd.to_datetime(date_cols, errors="coerce")
+    valid_mask = ~parsed_dates.isna()
+    valid_cols = [c for c, ok in zip(date_cols, valid_mask) if ok]
+    valid_dates = parsed_dates[valid_mask]
+
+    col1, col2, col3 = st.columns([2, 2, 2])
+
+    with col1:
+        sel_countries = st.multiselect(
+            "\U0001f30d Country",
+            options=all_countries,
+            default=all_countries,
+            key="act_country_filter",
+        )
+
+    with col2:
+        min_date = valid_dates.min().date() if len(valid_dates) else date(2020, 1, 1)
+        max_date = valid_dates.max().date() if len(valid_dates) else date.today()
+        start_date = st.date_input(
+            "\U0001f4c5 From",
+            value=min_date,
+            min_value=min_date,
+            max_value=max_date,
+            key="act_date_start",
+        )
+
+    with col3:
+        end_date = st.date_input(
+            "\U0001f4c5 To",
+            value=max_date,
+            min_value=min_date,
+            max_value=max_date,
+            key="act_date_end",
+        )
+
+    st.markdown("")  # spacing
+
+    mask_countries = recording_data.index.get_level_values(0).isin(sel_countries)
+    filtered = recording_data[mask_countries]
+
+    if valid_cols:
+        keep_cols = [
+            c for c, d in zip(valid_cols, valid_dates)
+            if start_date <= d.date() <= end_date
+        ]
+        other_cols = [c for c in date_cols if c not in valid_cols]
+        filtered = filtered[other_cols + keep_cols]
+
+    if filtered.empty:
+        st.warning("No data matches the current filters.")
+
+    return filtered
 
 
 if __name__ == "__main__":

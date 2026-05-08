@@ -8,26 +8,6 @@ from PIL import Image
 from components.ui_styles import info_grid, section_header, SECTION_COLORS
 
 
-def render_site_filters(site_info: pd.DataFrame) -> tuple:
-    """Render country and site selection filters."""
-    section_header("Site selection", SECTION_COLORS["site"], "🌍")
-
-    # Country filter
-    countries = site_info["Country"].dropna().unique().tolist()
-    selected_country = st.selectbox(
-        "Country", sorted(countries), key="site_country_filter"
-    )
-
-    # Filter by country
-    filtered_site_info = site_info[site_info["Country"] == selected_country]
-
-    # Site filter
-    sites = filtered_site_info["Site"].dropna().unique().tolist()
-    selected_site = st.selectbox("Site", sorted(sites), key="site_site_filter")
-
-    return selected_country, selected_site, filtered_site_info
-
-
 def render_site_details(filtered_data: pd.DataFrame, selected_site: str) -> None:
     """Render detailed site information as icon-labelled info cards."""
     site_data = filtered_data[filtered_data["Site"] == selected_site]

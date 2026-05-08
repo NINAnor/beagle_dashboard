@@ -5,8 +5,6 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 import streamlit as st
 
-from components.ui_styles import render_info_section_header
-
 
 def render_country_filter(
     data: pd.DataFrame, column_name: str = "Country", key_prefix: str = "main"
@@ -126,25 +124,6 @@ def render_site_filter(
 
         return selected_sites
 
-
-def render_device_type_filter(
-    data: pd.DataFrame, column_name: str = "device_type", key_prefix: str = "main"
-) -> list[str]:
-    """Render a filter for device types."""
-    if column_name not in data.columns:
-        return []
-
-    device_types = sorted(data[column_name].dropna().unique())
-
-    selected_types = st.multiselect(
-        "🔧 **Select Device Types**",
-        options=device_types,
-        default=device_types,
-        key=f"device_type_filter_{key_prefix}",
-        help="Filter by device type",
-    )
-
-    return selected_types
 
 
 def apply_filters(
@@ -396,7 +375,6 @@ def render_smart_preset_filters(
     data: pd.DataFrame, key_prefix: str = "main"
 ) -> tuple[pd.DataFrame, dict]:
     """Render smart preset filters with optional custom filtering."""
-    render_info_section_header("🔍 Quick Filters", style_class="quick-filters-header")
 
     # Preset selection
     preset_options = [
@@ -421,7 +399,6 @@ def render_smart_preset_filters(
     # Show preset description
     if preset != "⚙️ Custom Filters":
         preset_config = get_preset_filters(preset, data)
-        st.info(f"ℹ️ {preset_config['description']}")
 
         # Apply preset filters
         filtered_data = apply_filters(
@@ -527,12 +504,6 @@ def render_smart_preset_filters(
                     "lon_range": None,
                 }
             )
-
-    # Display filter summary
-    if len(filtered_data) != len(data):
-        st.success(f"📊 Showing **{len(filtered_data)}** of **{len(data)}** devices")
-    else:
-        st.info(f"📊 Showing all **{len(data)}** devices")
 
     return filtered_data, active_filters
 

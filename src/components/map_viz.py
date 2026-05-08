@@ -1,5 +1,5 @@
 """
-Map visualization components for the TABMON dashboard.
+Map visualization components for the BEAGLE dashboard.
 """
 
 import folium
@@ -8,8 +8,7 @@ import streamlit as st
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 
-from components.auth import get_map_zoom_level
-from config.settings import DEFAULT_ZOOM, MAP_HEIGHT, MAP_WIDTH, MIN_ZOOM_LEVEL
+from config.settings import DEFAULT_ZOOM, DETAILED_MAP_MAX_ZOOM, MAP_HEIGHT, MAP_WIDTH, MIN_ZOOM_LEVEL
 
 
 def render_device_map(
@@ -20,8 +19,8 @@ def render_device_map(
         st.warning("⚠️ No site information available")
         return None
 
-    # Use provided settings or get dynamic zoom level based on user authorization
-    use_max_zoom = max_zoom if max_zoom is not None else get_map_zoom_level()
+    # Always use full zoom — no privacy restriction
+    use_max_zoom = max_zoom if max_zoom is not None else DETAILED_MAP_MAX_ZOOM
 
     # Create map centered on device locations
     center_lat = site_info["Latitude"].mean()

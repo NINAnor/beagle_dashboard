@@ -1,87 +1,67 @@
 """
-Sidebar components for the TABMON dashboard.
+Sidebar components for the BEAGLE dashboard.
 """
 
 import streamlit as st
 
+
 def render_dashboard_sidebar(metrics: dict = None):
-    """Render the enhanced dashboard sidebar without time granularity control."""
-    
-    st.markdown("---")
-
-    # Status Summary
+    """Render the compact device status sidebar with visual health bar."""
     if metrics:
-        total_devices = metrics.get("total_devices", 0)
-        online_devices = metrics.get("online_devices", 0)
-        offline_devices = metrics.get("offline_devices", 0)
+        total = metrics.get("total_devices", 0)
+        online = metrics.get("online_devices", 0)
+        offline = metrics.get("offline_devices", 0)
 
-        if total_devices > 0:
-            online_percentage = (online_devices / total_devices) * 100
-            offline_percentage = (offline_devices / total_devices) * 100
+        if total > 0:
+            online_pct = online / total * 100
+            offline_pct = offline / total * 100
 
+            # Health bar
             st.markdown(
-                """
-            <div class='status-summary-box'>
-                <h4 style='color: #2E86AB; margin-top: 0;'>📊 Device Status Summary</h4>
-            </div>
-            """,
+                f"""
+                <div style="margin-bottom:0.6rem;">
+                    <div style="font-size:0.72em;font-weight:700;color:#5a7a8a;
+                                text-transform:uppercase;letter-spacing:.05em;
+                                margin-bottom:0.35rem;">
+                        🟢 Network health
+                    </div>
+                    <div style="background:#e8f4f8;border-radius:20px;height:10px;overflow:hidden;">
+                        <div style="background:linear-gradient(90deg,#2DC653,#0A9396);
+                                    width:{online_pct:.1f}%;height:100%;
+                                    border-radius:20px;transition:width .4s ease;"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;
+                                font-size:0.75em;margin-top:0.25rem;">
+                        <span style="color:#2DC653;font-weight:600;">
+                            ● {online} online ({online_pct:.0f}%)
+                        </span>
+                        <span style="color:#E76F51;font-weight:600;">
+                            ● {offline} offline ({offline_pct:.0f}%)
+                        </span>
+                    </div>
+                </div>
+                <div style="font-size:0.78em;color:#6b8fa3;
+                            background:#e8f4f8;border-radius:8px;
+                            padding:0.3rem 0.6rem;display:inline-block;
+                            margin-bottom:0.4rem;">
+                    📡 {total} devices total
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
-            col1, col2 = st.columns(2)
-
-            with col1:
-                st.metric(
-                    label="🟢 Online",
-                    value=f"{online_devices}",
-                    delta=f"{online_percentage:.1f}%",
-                )
-
-            with col2:
-                st.metric(
-                    label="🔴 Offline",
-                    value=f"{offline_devices}",
-                    delta=f"{offline_percentage:.1f}%",
-                )
-
-            # Total devices
-            st.metric(label="📱 Total Devices", value=f"{total_devices}")
-
-    # Status legend
-    st.markdown(
-        """
-    <div class='legend-box'>
-        <h4 style='color: #2E86AB; margin-top: 0;'>🏷️ Status Legend</h4>
-        <p style='margin: 0.5rem 0;'>
-            <span style='color: green; font-weight: bold;'>🟢 Online:</span>
-            Active within 3 days
-        </p>
-        <p style='margin: 0.5rem 0;'>
-            <span style='color: red; font-weight: bold;'>🔴 Offline:</span>
-            No activity > 3 days
-        </p>
-        <p style='margin: 0.5rem 0; font-size: 0.8em; color: #666;'>
-            <em>Status is determined by the last recorded audio file timestamp.</em>
-        </p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("---")
+    st.caption("Online = active within 3 days")
+    st.divider()
 
 
 def render_about_section():
     """Render about information in the sidebar."""
-    with st.expander("ℹ️ About TABMON", expanded=False):
-        st.markdown("""
-        **TABMON** develops a transnational biodiversity monitoring network using
-        acoustic sensors across Europe, demonstrating how acoustic
-        monitoring complements existing monitoring to address EU directive gaps and
-        Biodiversity Strategy targets.
-
-        You can find more info on [our website](https://tabmon-eu.nina.no/) or
-        """)
+    with st.expander("ℹ️ About BEAGLE", expanded=False):
+        st.markdown(
+            "**BEAGLE** is set to deliver up to 1 billion data points from next-generation biodiversity monitoring across "
+            "terrestrial, freshwater, and marine ecosystems in EU Member States and Associated Countries. "
+            "using acoustic sensors across Europe.\n\n"
+        )
 
 
 def render_complete_sidebar(metrics: dict = None):

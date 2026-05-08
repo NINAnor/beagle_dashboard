@@ -19,8 +19,8 @@ maxUploadSize = 50
 runOnSave = false
 
 [theme]
-backgroundColor = "#FFFFFF"  # background of the whole app
+backgroundColor = "#F8FAFB"
 font = "sans serif"
-primaryColor = "#2E86AB"
-secondaryBackgroundColor = "#F0F2F6"  # side dashboard
-textColor = "#262730"
+primaryColor = "#0A9396"
+secondaryBackgroundColor = "#E8F4F8"
+textColor = "#1C2B3A"

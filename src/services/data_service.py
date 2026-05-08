@@ -1,12 +1,12 @@
 """
-Data service for TABMON dashboard.
+Data service for BEAGLE dashboard.
 Handles all data loading, processing, and caching operations.
 """
 
 import pandas as pd
 import streamlit as st
 
-from config.settings import BASE_DATA_URL, CACHE_TTL, PARQUET_FILE_URL, SITE_CSV_URL
+from config.settings import BASE_DATA_URL, CACHE_TTL
 from utils.data_loader import load_site_info
 
 
@@ -15,9 +15,6 @@ class DataService:
 
     def __init__(self):
         """Initialize DataService with centralized configuration."""
-        self.site_csv = SITE_CSV_URL
-        self.parquet_file = PARQUET_FILE_URL
-        self._temp_files = {}
         self.base_dir = BASE_DATA_URL
 
     @st.cache_data(ttl=CACHE_TTL, show_spinner=False)

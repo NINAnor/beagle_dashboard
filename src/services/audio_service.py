@@ -1,6 +1,6 @@
 """
 Audio Service
-Handles audio file operations and data processing for the TABMON dashboard.
+Handles audio file operations and data processing for the BEAGLE dashboard.
 """
 
 import pandas as pd

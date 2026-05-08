@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   traefik:
     image: traefik:v2.10
@@ -7,6 +5,8 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
+    environment:
+      - DOCKER_API_VERSION=1.41
     ports:
       - 8080:8080  # Traefik dashboard
       - 8050:80      # HTTP
@@ -20,18 +20,19 @@ services:
   dashboard:
     build:
       context: .
-    #image: ghcr.io/ninanor/dashboard-dashboard:main@sha-9a71d5a
     environment:
       - BASE_DATA_DIR="http://rclone:8081/data/"
+    ports:
+      - "8501:8501"
     depends_on:
       rclone:
         condition: service_healthy
     restart: unless-stopped
     labels:
-      - "traefik.http.routers.tabmon__dashboard.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.tabmon__dashboard.entrypoints=web"
-      - "traefik.http.routers.tabmon__dashboard.priority=1"
-      - "traefik.http.services.tabmon__dashboard.loadbalancer.server.port=8501"
+      - "traefik.http.routers.beagle__dashboard.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.beagle__dashboard.entrypoints=web"
+      - "traefik.http.routers.beagle__dashboard.priority=1"
+      - "traefik.http.services.beagle__dashboard.loadbalancer.server.port=8501"
     networks:
       - default
       - traefik-proxy
@@ -52,12 +53,12 @@ services:
       start_period: 10s
     restart: unless-stopped
     labels:
-      - "traefik.http.routers.tabmon__dashboard_rclone.rule=PathPrefix(`/data/`)"
-      - "traefik.http.routers.tabmon__dashboard_rclone.entrypoints=web"
-      - "traefik.http.routers.tabmon__dashboard_rclone.priority=10"
-      - "traefik.http.services.tabmon__dashboard_rclone.loadbalancer.server.port=8081"
-      - "traefik.http.routers.tabmon__dashboard_rclone.middlewares=tabmon__dashboard_rclone_auth"
-      - "traefik.http.middlewares.tabmon__dashboard_rclone_auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/"
+      - "traefik.http.routers.beagle__dashboard_rclone.rule=PathPrefix(`/data/`)"
+      - "traefik.http.routers.beagle__dashboard_rclone.entrypoints=web"
+      - "traefik.http.routers.beagle__dashboard_rclone.priority=10"
+      - "traefik.http.services.beagle__dashboard_rclone.loadbalancer.server.port=8081"
+      - "traefik.http.routers.beagle__dashboard_rclone.middlewares=beagle__dashboard_rclone_auth"
+      - "traefik.http.middlewares.beagle__dashboard_rclone_auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/"
     networks:
       - default
       - traefik-proxy

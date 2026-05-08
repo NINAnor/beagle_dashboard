@@ -1,37 +1,25 @@
-# TABMON Dashboard ⭐
+# BEAGLE Dashboard ⭐
 
-A modern, secure Streamlit dashboard for visualizing and managing device deployment metadata for the [TABMON project](https://www.nina.no/english/TABMON).
+A modern, Streamlit dashboard for visualizing and managing device deployment metadata for the [BEAGLE project]().
 
 ## 🎯 Features
 
 ### 📊 **Dashboard Components**
 - **🗺️ Map Visualization**: Interactive maps with real-time device monitoring and status tracking
-- **🎵 Audio Analysis**: Advanced audio file browsing, playback, and analysis tools
+- **🎵 Data Overview**: Visualize the recording activity of the devices
 - **📋 Site Metadata**: Comprehensive site information and metadata management
-
-### 🔐 **Security & Authentication**
-- HTTP Basic Authentication for secure data access
-- Environment-based credential management
-- Docker secrets integration for production deployments
-
-### 🚀 **Modern Architecture**
-- Service layer separation for data handling
-- Component-based UI architecture
-- Efficient data processing with DuckDB
-- Responsive design with custom CSS styling
 
 ## 🏗️ Architecture
 
 The dashboard leverages:
 - **`rclone`** to serve data from S3 storage
-- **`duckdb`** for optimized querying of `.parquet` files
 - **Docker Compose** for multi-service orchestration
 - **Reverse proxy** with authentication for secure access
 
 ```
 ┌─────────────────┐    ┌──────────────┐    ┌─────────────┐
 │   Dashboard     │────│ Reverse Proxy│────│   rclone    │
-│   (Streamlit)   │    │   (nginx)    │    │  (S3 data)  │
+│   (Streamlit)   │    │   (træfik)   │    │  (S3 data)  │
 └─────────────────┘    └──────────────┘    └─────────────┘
 ```
 
@@ -127,15 +115,6 @@ See `DEPLOYMENT.md` for detailed deployment instructions.
 3. Make your changes and test thoroughly
 4. Commit with clear, descriptive messages
 5. Push and create a pull request
-
-## 📝 Changelog
-
-### Latest Updates
-- ✨ Modernized audio dashboard with enhanced playback and analysis features
-- 🔐 Implemented secure authentication system with environment-based credentials
-- 🎨 Updated UI with modern styling and responsive design
-- 🏗️ Refactored to service-based architecture for better maintainability
-- 🧹 Cleaned up codebase and removed legacy files
 
 ## 👥 Acknowledgment
 

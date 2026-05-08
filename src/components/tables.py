@@ -1,5 +1,5 @@
 """
-Table components for the TABMON dashboard.
+Table components for the BEAGLE dashboard.
 """
 
 import pandas as pd
